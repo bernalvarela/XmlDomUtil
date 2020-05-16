@@ -4,6 +4,7 @@ import static com.bernalvarela.xml.util.XMLTestUtil.getFile;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.bernalvarela.xml.entity.XmlAttribute;
 import com.bernalvarela.xml.entity.XmlElement;
 import com.bernalvarela.xml.operation.XmlOperation;
 import com.bernalvarela.xml.operation.impl.AddAfterOperation;
@@ -159,6 +160,30 @@ public class DomXmlUtilTest {
           .build()
   );
 
+  private final static List<XmlOperation> addElementWithAttributes = Collections.singletonList(
+      AddOperation.builder()
+          .xpath(WCS_ORDER_ID_XPATH)
+          .element(XmlElement.builder()
+              .name(WCS_ORDER_IDS_ELEMENT_NAME)
+              .value(XmlElement.builder()
+                  .name(WCS_ORDER_ID_ELEMENT_NAME)
+                  .value("NEW_VALUE")
+                  .attributes(Arrays.asList(
+                      XmlAttribute.builder()
+                          .name("ATTR1")
+                          .value("VALUE1")
+                          .build(),
+                      XmlAttribute.builder()
+                          .name("ATTR2")
+                          .value("VALUE2")
+                          .build()
+                      )
+                  )
+                  .build())
+              .build())
+          .build()
+  );
+
   private final static List<XmlOperation> addListElements = Collections.singletonList(
       AddOperation.builder()
           .xpath(WCS_ORDER_ID_XPATH)
@@ -263,6 +288,11 @@ public class DomXmlUtilTest {
         ),
         Arguments.of(
             addElement,
+            getFile("xml/DOM_XML_UTIL/inputNotExistsElementXML.xml"),
+            getFile("xml/DOM_XML_UTIL/add/element/single/expectedNotExistElement.xml")
+        ),
+        Arguments.of(
+            addElementWithAttributes,
             getFile("xml/DOM_XML_UTIL/inputNotExistsElementXML.xml"),
             getFile("xml/DOM_XML_UTIL/add/element/single/expectedNotExistElement.xml")
         ),
