@@ -294,13 +294,15 @@ public class DomXmlUtilTest {
         Arguments.of(
             addElementWithAttributes,
             getFile("xml/DOM_XML_UTIL/inputNotExistsElementXML.xml"),
-            getFile("xml/DOM_XML_UTIL/add/element/single/expectedNotExistElement.xml")
+            getFile("xml/DOM_XML_UTIL/add/element/single/expectedNotExistElementWithAttributes.xml")
         ),
-        Arguments.of(addListElements,
+        Arguments.of(
+            addListElements,
             getFile("xml/DOM_XML_UTIL/add/element/inputExistsElementXML.xml"),
             getFile("xml/DOM_XML_UTIL/add/element/expectedExistElement.xml")
         ),
-        Arguments.of(addListElements,
+        Arguments.of(
+            addListElements,
             getFile("xml/DOM_XML_UTIL/inputNotExistsElementXML.xml"),
             getFile("xml/DOM_XML_UTIL/add/element/list/expectedNotExistElement.xml")
         )
