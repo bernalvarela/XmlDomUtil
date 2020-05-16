@@ -11,7 +11,6 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -23,8 +22,6 @@ import org.w3c.dom.NodeList;
 public abstract class XmlOperation {
 
   private final String xpath;
-
-  private final String elementName;
 
   private final XPath xPathExpression = XPathFactory.newInstance().newXPath();
 
