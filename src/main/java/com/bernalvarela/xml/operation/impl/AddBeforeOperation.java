@@ -12,8 +12,7 @@ public class AddBeforeOperation extends AddContiguousOperation {
     addElementBefore(
         document,
         getXpath(),
-        getElementName(),
-        getValue(),
+        getElement(),
         getContiguousElementXpath());
   }
 }

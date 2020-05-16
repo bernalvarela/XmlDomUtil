@@ -11,10 +11,9 @@ public class AddAfterOperation extends AddContiguousOperation {
   public void executeOperation(Document document) {
     addElementAfter(
         document,
-        this.getXpath(),
-        this.getElementName(),
-        this.getValue(),
-        this.getContiguousElementXpath()
+        getXpath(),
+        getElement(),
+        getContiguousElementXpath()
         );
   }
 }

@@ -5,7 +5,7 @@ import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
 @Getter
-public abstract class AddContiguousOperation extends AddingOperation {
+public abstract class AddContiguousOperation extends ElementOperation {
 
   private final String contiguousElementXpath;
 }
