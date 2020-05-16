@@ -64,127 +64,6 @@ public class DomXmlUtilTest {
     assertEquals(expectedXml, returnXml);
   }
 
-  @Test
-  public void testOperationAdd() {
-    List<XmlOperation> operation = Collections.singletonList(
-        AddOperation.builder()
-            .xpath(WCS_ORDER_ID_XPATH)
-            .elementName(WCS_ORDER_ID_ELEMENT_NAME)
-            .value("NEW_VALUE")
-            .build()
-    );
-
-    String inputNotExistElementXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><NEW_ORDER><ORDER_ID></ORDER_ID>"
-        + "<DELIVERY_CENTRE_GROUP_ID></DELIVERY_CENTRE_GROUP_ID></NEW_ORDER>";
-    DomXmlUtil domXmlUtil = new DomXmlUtil(inputNotExistElementXML);
-    String expectedNotExistElementXML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><NEW_ORDER>"
-        + "<ORDER_ID/><DELIVERY_CENTRE_GROUP_ID/><WCS_ORDER_ID>NEW_VALUE</WCS_ORDER_ID></NEW_ORDER>";
-
-    domXmlUtil.executeOperations(operation);
-    String returnXml = domXmlUtil.getDocument();
-    assertEquals(expectedNotExistElementXML, returnXml);
-
-    String inputExistElementXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><NEW_ORDER><ORDER_ID></ORDER_ID>"
-        + "<DELIVERY_CENTRE_GROUP_ID></DELIVERY_CENTRE_GROUP_ID><WCS_ORDER_ID/></NEW_ORDER>";
-    domXmlUtil = new DomXmlUtil(inputExistElementXML);
-    String expectedExistElementXML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><NEW_ORDER>"
-        + "<ORDER_ID/><DELIVERY_CENTRE_GROUP_ID/><WCS_ORDER_ID/></NEW_ORDER>";
-
-    domXmlUtil.executeOperations(operation);
-    returnXml = domXmlUtil.getDocument();
-    assertEquals(expectedExistElementXML, returnXml);
-  }
-
-  @Test
-  public void testOperationModify() {
-    List<XmlOperation> operation = Collections.singletonList(
-        ModifyOperation.builder()
-            .xpath(WCS_ORDER_ID_XPATH + "/" + WCS_ORDER_ID_ELEMENT_NAME)
-            .value("NEW_VALUE")
-            .build()
-    );
-
-    String inputNotExistElementXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><NEW_ORDER><ORDER_ID></ORDER_ID>"
-        + "<DELIVERY_CENTRE_GROUP_ID></DELIVERY_CENTRE_GROUP_ID></NEW_ORDER>";
-    DomXmlUtil domXmlUtil = new DomXmlUtil(inputNotExistElementXML);
-    String expectedNotExistElementXML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><NEW_ORDER>"
-        + "<ORDER_ID/><DELIVERY_CENTRE_GROUP_ID/></NEW_ORDER>";
-
-    domXmlUtil.executeOperations(operation);
-    String returnXml = domXmlUtil.getDocument();
-    assertEquals(expectedNotExistElementXML, returnXml);
-
-    String inputExistElementXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><NEW_ORDER><ORDER_ID></ORDER_ID>"
-        + "<DELIVERY_CENTRE_GROUP_ID></DELIVERY_CENTRE_GROUP_ID><WCS_ORDER_ID/></NEW_ORDER>";
-    domXmlUtil = new DomXmlUtil(inputExistElementXML);
-    String expectedExistElementXML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><NEW_ORDER>"
-        + "<ORDER_ID/><DELIVERY_CENTRE_GROUP_ID/><WCS_ORDER_ID>NEW_VALUE</WCS_ORDER_ID></NEW_ORDER>";
-
-    domXmlUtil.executeOperations(operation);
-    returnXml = domXmlUtil.getDocument();
-    assertEquals(expectedExistElementXML, returnXml);
-  }
-
-  @Test
-  public void testOperationRemove() {
-    List<XmlOperation> operation = Collections.singletonList(
-        RemoveOperation.builder()
-            .xpath(WCS_ORDER_ID_XPATH + "/" + WCS_ORDER_ID_ELEMENT_NAME)
-            .build()
-    );
-
-    String inputNotExistElementXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><NEW_ORDER><ORDER_ID></ORDER_ID>"
-        + "<DELIVERY_CENTRE_GROUP_ID></DELIVERY_CENTRE_GROUP_ID></NEW_ORDER>";
-    DomXmlUtil domXmlUtil = new DomXmlUtil(inputNotExistElementXML);
-    String expectedNotExistElementXML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><NEW_ORDER>"
-        + "<ORDER_ID/><DELIVERY_CENTRE_GROUP_ID/></NEW_ORDER>";
-
-    domXmlUtil.executeOperations(operation);
-    String returnXml = domXmlUtil.getDocument();
-    assertEquals(expectedNotExistElementXML, returnXml);
-
-    String inputExistElementXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><NEW_ORDER><ORDER_ID></ORDER_ID>"
-        + "<DELIVERY_CENTRE_GROUP_ID></DELIVERY_CENTRE_GROUP_ID><WCS_ORDER_ID/></NEW_ORDER>";
-    domXmlUtil = new DomXmlUtil(inputExistElementXML);
-    String expectedExistElementXML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><NEW_ORDER>"
-        + "<ORDER_ID/><DELIVERY_CENTRE_GROUP_ID/></NEW_ORDER>";
-
-    domXmlUtil.executeOperations(operation);
-    returnXml = domXmlUtil.getDocument();
-    assertEquals(expectedExistElementXML, returnXml);
-  }
-
-  @Test
-  public void testOperationAddBefore() {
-    List<XmlOperation> operation = Collections.singletonList(
-        AddBeforeOperation.builder()
-            .xpath(WCS_ORDER_ID_XPATH)
-            .elementName(WCS_ORDER_ID_ELEMENT_NAME)
-            .value(EXTERNAL_REFERENCE_ID_VALUE)
-            .contiguousElementXpath("/NEW_ORDER/ORDER_ID")
-            .build()
-    );
-    String inputNotExistElementXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><NEW_ORDER><ORDER_ID></ORDER_ID>"
-        + "<DELIVERY_CENTRE_GROUP_ID></DELIVERY_CENTRE_GROUP_ID></NEW_ORDER>";
-    DomXmlUtil domXmlUtil = new DomXmlUtil(inputNotExistElementXML);
-    String expectedNotExistElementXML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><NEW_ORDER>"
-        + "<WCS_ORDER_ID>EXTERNAL_REFERENCE_ID_VALUE</WCS_ORDER_ID><ORDER_ID/><DELIVERY_CENTRE_GROUP_ID/></NEW_ORDER>";
-
-    domXmlUtil.executeOperations(operation);
-    String returnXml = domXmlUtil.getDocument();
-    assertEquals(expectedNotExistElementXML, returnXml);
-
-    String inputExistElementXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><NEW_ORDER><ORDER_ID></ORDER_ID>"
-        + "<DELIVERY_CENTRE_GROUP_ID></DELIVERY_CENTRE_GROUP_ID><WCS_ORDER_ID/></NEW_ORDER>";
-    domXmlUtil = new DomXmlUtil(inputExistElementXML);
-    String expectedExistElementXML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><NEW_ORDER>"
-        + "<ORDER_ID/><DELIVERY_CENTRE_GROUP_ID/><WCS_ORDER_ID/></NEW_ORDER>";
-
-    domXmlUtil.executeOperations(operation);
-    returnXml = domXmlUtil.getDocument();
-    assertEquals(expectedExistElementXML, returnXml);
-  }
-
   private List<XmlOperation> generateOperations() {
     return Arrays.asList(
         ModifyOperation.builder()
@@ -204,7 +83,7 @@ public class DomXmlUtilTest {
   }
 
   @ParameterizedTest
-  @MethodSource("provideStringsForIsBlank")
+  @MethodSource("testCasesInfo")
   public void testOperation(List<XmlOperation> operations, String inputXml, String expectedXml) {
     String returnXml;
     DomXmlUtil domXmlUtil = new DomXmlUtil(inputXml);
@@ -240,7 +119,37 @@ public class DomXmlUtilTest {
           .build()
   );
 
-  private static Stream<Arguments> provideStringsForIsBlank() {
+  private final static List<XmlOperation> addBefore = Collections.singletonList(
+      AddBeforeOperation.builder()
+          .xpath(WCS_ORDER_ID_XPATH)
+          .elementName(WCS_ORDER_ID_ELEMENT_NAME)
+          .value(EXTERNAL_REFERENCE_ID_VALUE)
+          .contiguousElementXpath("/NEW_ORDER/ORDER_ID")
+          .build()
+  );
+
+  private final static List<XmlOperation> remove = Collections.singletonList(
+      RemoveOperation.builder()
+          .xpath(WCS_ORDER_ID_XPATH + "/" + WCS_ORDER_ID_ELEMENT_NAME)
+          .build()
+  );
+
+  private final static List<XmlOperation> modify = Collections.singletonList(
+      ModifyOperation.builder()
+          .xpath(WCS_ORDER_ID_XPATH + "/" + WCS_ORDER_ID_ELEMENT_NAME)
+          .value("NEW_VALUE")
+          .build()
+  );
+
+  private final static List<XmlOperation> add = Collections.singletonList(
+      AddOperation.builder()
+          .xpath(WCS_ORDER_ID_XPATH)
+          .elementName(WCS_ORDER_ID_ELEMENT_NAME)
+          .value("NEW_VALUE")
+          .build()
+  );
+
+  private static Stream<Arguments> testCasesInfo() {
     return Stream.of(
         Arguments.of(
             addAfterOrUpdate,
@@ -271,6 +180,46 @@ public class DomXmlUtilTest {
             addBeforeOrUpdate,
             getFile("xml/DOM_XML_UTIL/addBefore/inputExistsElementXML.xml"),
             getFile("xml/DOM_XML_UTIL/addBeforeOrUpdate/expectedExistElement.xml")
+        ),
+        Arguments.of(
+            addBefore,
+            getFile("xml/DOM_XML_UTIL/inputNotExistsElementXML.xml"),
+            getFile("xml/DOM_XML_UTIL/addBefore/expectedNotExistElement.xml")
+        ),
+        Arguments.of(
+            addBefore,
+            getFile("xml/DOM_XML_UTIL/addBefore/inputExistsElementXML.xml"),
+            getFile("xml/DOM_XML_UTIL/addBefore/expectedExistElement.xml")
+        ),
+        Arguments.of(
+            remove,
+            getFile("xml/DOM_XML_UTIL/inputNotExistsElementXML.xml"),
+            getFile("xml/DOM_XML_UTIL/remove/expectedNotExistElement.xml")
+        ),
+        Arguments.of(
+            remove,
+            getFile("xml/DOM_XML_UTIL/inputExistsElementXML.xml"),
+            getFile("xml/DOM_XML_UTIL/remove/expectedExistElement.xml")
+        ),
+        Arguments.of(
+            modify,
+            getFile("xml/DOM_XML_UTIL/inputNotExistsElementXML.xml"),
+            getFile("xml/DOM_XML_UTIL/modify/expectedNotExistElement.xml")
+        ),
+        Arguments.of(
+            modify,
+            getFile("xml/DOM_XML_UTIL/inputExistsElementXML.xml"),
+            getFile("xml/DOM_XML_UTIL/modify/expectedExistElement.xml")
+        ),
+        Arguments.of(
+            add,
+            getFile("xml/DOM_XML_UTIL/inputNotExistsElementXML.xml"),
+            getFile("xml/DOM_XML_UTIL/add/expectedNotExistElement.xml")
+        ),
+        Arguments.of(
+            add,
+            getFile("xml/DOM_XML_UTIL/inputExistsElementXML.xml"),
+            getFile("xml/DOM_XML_UTIL/add/expectedExistElement.xml")
         )
     );
   }
