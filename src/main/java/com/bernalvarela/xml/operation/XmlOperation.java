@@ -1,5 +1,7 @@
 package com.bernalvarela.xml.operation;
 
+import com.bernalvarela.xml.entity.XmlAttribute;
+import com.bernalvarela.xml.entity.XmlElement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -9,6 +11,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -33,7 +36,7 @@ public abstract class XmlOperation {
       for (int i = 0; i < nodes.getLength(); i++) {
         retValue.add(nodes.item(i).getNodeValue());
       }
-    } catch (XPathExpressionException e) {
+    } catch (XPathExpressionException ignored) {
     }
     return retValue;
   }
@@ -46,41 +49,39 @@ public abstract class XmlOperation {
       if (Objects.nonNull(node)) {
         retValue = Objects.isNull(node.getNodeValue()) ? "" : node.getNodeValue();
       }
-    } catch (XPathExpressionException e) {
+    } catch (XPathExpressionException ignored) {
     }
     return retValue;
   }
 
-  protected void addElement(Document document, String xpathStr, String elementName, Object value) {
-    if (searchNode(document,xpathStr + "/" + elementName) == null) {
+  protected void addElement(Document document, String xpathStr, XmlElement element) {
+    if (searchNode(document,xpathStr + "/" + element.getName()) == null) {
       Node node = searchNode(document, xpathStr);
       if (Objects.nonNull(node)) {
-        node.appendChild(generateElement(document, elementName, value.toString()));
+        node.appendChild(generateElement(document, element));
       }
     }
   }
 
-  protected Void addElementBefore(Document document, String xpathStr, String elementName, Object value, String beforeElementXpath) {
-    if (searchNode(document, xpathStr + "/" + elementName) == null) {
+  protected void addElementBefore(Document document, String xpathStr, XmlElement element, String beforeElementXpath) {
+    if (searchNode(document, xpathStr + "/" + element.getName()) == null) {
       Node node = searchNode(document, xpathStr);
       if (Objects.nonNull(node)) {
-        node.insertBefore(generateElement(document, elementName, value.toString()), searchNode(document, beforeElementXpath));
+        node.insertBefore(generateElement(document, element), searchNode(document, beforeElementXpath));
       }
     }
-    return null;
   }
 
-  protected Void addElementAfter(Document document, String xpathStr, String elementName, Object value, String afterElementXpath) {
-    if (searchNode(document, xpathStr + "/" + elementName) == null) {
+  protected void addElementAfter(Document document, String xpathStr, XmlElement element, String afterElementXpath) {
+    if (searchNode(document, xpathStr + "/" + element.getName()) == null) {
       Node node = searchNode(document, xpathStr);
       if (Objects.nonNull(node)) {
         node.insertBefore(
-            generateElement(document, elementName, value.toString()),
+            generateElement(document, element),
             searchNode(document, afterElementXpath).getNextSibling()
         );
       }
     }
-    return null;
   }
 
   private Node searchNode(Document document, String xpathStr) {
@@ -93,15 +94,37 @@ public abstract class XmlOperation {
       if (Objects.nonNull(nlist) && nlist.getLength() > 0) {
         node = ((NodeList) res).item(0);
       }
-    } catch (XPathExpressionException e) {
+    } catch (XPathExpressionException ignored) {
     }
     return node;
   }
 
-  private Element generateElement(Document document, String name, String value) {
-    Element newElement = document.createElement(name);
-    newElement.setTextContent(value);
+  private Element generateElement(Document document, XmlElement element) {
+    Element newElement = document.createElement(element.getName());
+    this.setValueToElement(document, newElement, element.getValue());
+    this.setAttributesToElement(newElement, element.getAttributes());
     return newElement;
+  }
+
+  private void setValueToElement(Document document, Node newElement, Object value) {
+    if (value instanceof XmlElement) {
+      newElement.appendChild(this.generateElement(document, (XmlElement) value));
+    } else if (value instanceof List){
+      ((List) value).forEach(valueTmp -> this.setValueToElement(document, newElement, valueTmp));
+    } else {
+      newElement.setTextContent(value.toString());
+    }
+  }
+
+  private void setAttributesToElement(Element element, List<XmlAttribute> attributes) {
+    if (Objects.nonNull(attributes)) {
+      attributes.forEach(xmlAttribute -> {
+        if (element.hasAttribute(xmlAttribute.getName())) {
+          element.removeAttribute(xmlAttribute.getName());
+        }
+        element.setAttribute(xmlAttribute.getName(), xmlAttribute.getValue());
+      });
+    }
   }
 
   public void modifyElement(Document document, String xpathStr, Object newValue) {
@@ -116,7 +139,7 @@ public abstract class XmlOperation {
           node.setTextContent(newValue.toString());
         }
       }
-    } catch (XPathExpressionException e) {
+    } catch (XPathExpressionException ignored) {
     }
   }
 
@@ -133,7 +156,7 @@ public abstract class XmlOperation {
           parent.removeChild(node);
         }
       }
-    } catch (XPathExpressionException e) {
+    } catch (XPathExpressionException ignored) {
     }
   }
 

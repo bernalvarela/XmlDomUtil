@@ -1,5 +1,6 @@
 package com.bernalvarela.xml.operation.impl;
 
+import com.bernalvarela.xml.entity.XmlElement;
 import com.bernalvarela.xml.operation.AddContiguousOperation;
 import com.bernalvarela.xml.operation.AddingOperation;
 import java.util.Objects;
@@ -14,10 +15,9 @@ public class AddBeforeOrUpdateOperation extends AddContiguousOperation {
     if (Objects.isNull(searchElementValue(document,getXpath() + "/" + getElementName()))) {
       addElementBefore(
           document,
-          this.getXpath(),
-          this.getElementName(),
-          this.getValue(),
-          this.getContiguousElementXpath()
+          getXpath(),
+          XmlElement.builder().name(getElementName()).value(getValue()).build(),
+          getContiguousElementXpath()
       );
     } else {
       modifyElement(document, getXpath() + "/" + getElementName(), ((AddingOperation) this).getValue());

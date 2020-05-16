@@ -1,5 +1,6 @@
 package com.bernalvarela.xml.operation.impl;
 
+import com.bernalvarela.xml.entity.XmlElement;
 import com.bernalvarela.xml.operation.AddContiguousOperation;
 import lombok.experimental.SuperBuilder;
 import org.w3c.dom.Document;
@@ -12,8 +13,7 @@ public class AddAfterOperation extends AddContiguousOperation {
     addElementAfter(
         document,
         this.getXpath(),
-        this.getElementName(),
-        this.getValue(),
+        XmlElement.builder().name(this.getElementName()).value(this.getValue()).build(),
         this.getContiguousElementXpath()
         );
   }

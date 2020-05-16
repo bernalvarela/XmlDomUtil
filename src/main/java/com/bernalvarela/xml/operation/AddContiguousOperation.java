@@ -1,6 +1,7 @@
 package com.bernalvarela.xml.operation;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
 
 @SuperBuilder

@@ -11,8 +11,7 @@ public class XMLTestUtil {
     ClassLoader classLoader = XMLTestUtil.class.getClassLoader();
     try {
       return IOUtils.toString(Objects.requireNonNull(classLoader.getResourceAsStream(file)), StandardCharsets.UTF_8);
-    } catch (IOException e) {
-      e.printStackTrace();
+    } catch (IOException ignored) {
     }
     return null;
   }

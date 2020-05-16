@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NEW_ORDER>
+  <WCS_ORDER_ID att1="att1Value" att2="att2Value" att3="att3OldValue">EXTERNAL_REFERENCE_ID_VALUE</WCS_ORDER_ID>
+  <ORDER_ID/>
+  <DELIVERY_CENTRE_GROUP_ID/>
+</NEW_ORDER>
