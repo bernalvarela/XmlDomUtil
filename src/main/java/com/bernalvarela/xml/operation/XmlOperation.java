@@ -109,7 +109,9 @@ public abstract class XmlOperation {
     } else if (value instanceof List){
       ((List) value).forEach(valueTmp -> this.setValueToElement(document, newElement, valueTmp));
     } else {
-      newElement.setTextContent(value.toString());
+      if (Objects.nonNull(value)) {
+        newElement.setTextContent(value.toString());
+      }
     }
   }
 
