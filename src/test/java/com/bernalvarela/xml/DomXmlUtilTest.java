@@ -12,6 +12,7 @@ import com.bernalvarela.xml.operation.impl.AddAfterOrUpdateOperation;
 import com.bernalvarela.xml.operation.impl.AddBeforeOperation;
 import com.bernalvarela.xml.operation.impl.AddBeforeOrUpdateOperation;
 import com.bernalvarela.xml.operation.impl.AddOperation;
+import com.bernalvarela.xml.operation.impl.AddOrUpdateOperation;
 import com.bernalvarela.xml.operation.impl.ModifyOperation;
 import com.bernalvarela.xml.operation.impl.RemoveOperation;
 import com.bernalvarela.xml.util.DomXmlUtil;
@@ -85,9 +86,7 @@ public class DomXmlUtilTest {
     );
   }
 
-  @ParameterizedTest
-  @MethodSource("testCasesInfo")
-  public void testOperation(List<XmlOperation> operations, String inputXml, String expectedXml) {
+  public void testLogic(List<XmlOperation> operations, String inputXml, String expectedXml) {
     String returnXml;
     DomXmlUtil domXmlUtil = new DomXmlUtil(inputXml);
     domXmlUtil.executeOperations(operations);
@@ -151,12 +150,12 @@ public class DomXmlUtilTest {
       AddOperation.builder()
           .xpath(WCS_ORDER_ID_XPATH)
           .element(XmlElement.builder()
-                  .name(WCS_ORDER_IDS_ELEMENT_NAME)
-                  .value(XmlElement.builder()
-                      .name(WCS_ORDER_ID_ELEMENT_NAME)
-                      .value("NEW_VALUE")
-                      .build())
+              .name(WCS_ORDER_IDS_ELEMENT_NAME)
+              .value(XmlElement.builder()
+                  .name(WCS_ORDER_ID_ELEMENT_NAME)
+                  .value("NEW_VALUE")
                   .build())
+              .build())
           .build()
   );
 
@@ -203,11 +202,104 @@ public class DomXmlUtilTest {
                           .name(WCS_ORDER_ID_ELEMENT_NAME)
                           .value("NEW_VALUE3")
                           .build()
-                      )
+                  )
               )
               .build())
           .build()
   );
+
+  private static Stream<Arguments> testAddCasesInfo() {
+    return Stream.of(
+        Arguments.of(
+            add,
+            getFile("xml/DOM_XML_UTIL/inputNotExistsElementXML.xml"),
+            getFile("xml/DOM_XML_UTIL/add/value/expectedNotExistElement.xml")
+        ),
+        Arguments.of(
+            add,
+            getFile("xml/DOM_XML_UTIL/inputExistsElementXML.xml"),
+            getFile("xml/DOM_XML_UTIL/expectedExistElement.xml")
+        ),
+        Arguments.of(
+            addElement,
+            getFile("xml/DOM_XML_UTIL/add/element/inputExistsElementXML.xml"),
+            getFile("xml/DOM_XML_UTIL/add/element/expectedExistElement.xml")
+        ),
+        Arguments.of(
+            addElement,
+            getFile("xml/DOM_XML_UTIL/inputNotExistsElementXML.xml"),
+            getFile("xml/DOM_XML_UTIL/add/element/single/expectedNotExistElement.xml")
+        ),
+        Arguments.of(
+            addElementWithAttributes,
+            getFile("xml/DOM_XML_UTIL/inputNotExistsElementXML.xml"),
+            getFile("xml/DOM_XML_UTIL/add/element/single/expectedNotExistElementWithAttributes.xml")
+        ),
+        Arguments.of(
+            addListElements,
+            getFile("xml/DOM_XML_UTIL/add/element/inputExistsElementXML.xml"),
+            getFile("xml/DOM_XML_UTIL/add/element/expectedExistElement.xml")
+        ),
+        Arguments.of(
+            addListElements,
+            getFile("xml/DOM_XML_UTIL/inputNotExistsElementXML.xml"),
+            getFile("xml/DOM_XML_UTIL/add/element/list/expectedNotExistElement.xml")
+        ));
+  }
+
+  @ParameterizedTest
+  @MethodSource("testAddCasesInfo")
+  public void testAddOperation(List<XmlOperation> operations, String inputXml, String expectedXml) {
+    testLogic(operations, inputXml, expectedXml);
+  }
+
+  private final static List<XmlOperation> addOrUpdate = Collections.singletonList(
+      AddOrUpdateOperation.builder()
+          .xpath(WCS_ORDER_ID_XPATH)
+          .element(XmlElement.builder().name(WCS_ORDER_ID_ELEMENT_NAME).value("NEW_VALUE").build())
+          .build()
+  );
+
+  private final static List<XmlOperation> addOrUpdateElement = Collections.singletonList(
+      AddOrUpdateOperation.builder()
+          .xpath(WCS_ORDER_ID_XPATH)
+          .element(XmlElement.builder()
+            .name(WCS_ORDER_IDS_ELEMENT_NAME)
+            .value(XmlElement.builder()
+                .name(WCS_ORDER_ID_ELEMENT_NAME)
+                .value("NEW_VALUE")
+                .build())
+              .build())
+          .build()
+  );
+
+  private static Stream<Arguments> testAddOrUpdateCasesInfo() {
+    return Stream.of(
+        Arguments.of(
+            addOrUpdate,
+            getFile("xml/DOM_XML_UTIL/inputExistsElementXML.xml"),
+            getFile("xml/DOM_XML_UTIL/addOrUpdate/value/expectedExistElement.xml")
+        ),
+        Arguments.of(
+            addOrUpdateElement,
+            getFile("xml/DOM_XML_UTIL/add/element/inputExistsElementXML.xml"),
+            getFile("xml/DOM_XML_UTIL/addOrUpdate/element/expectedExistElement.xml")
+        )
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("testAddOrUpdateCasesInfo")
+  public void testAddOrUpdateOperation(List<XmlOperation> operations, String inputXml, String expectedXml) {
+    testLogic(operations, inputXml, expectedXml);
+  }
+
+
+  @ParameterizedTest
+  @MethodSource("testCasesInfo")
+  public void testOperation(List<XmlOperation> operations, String inputXml, String expectedXml) {
+    testLogic(operations, inputXml, expectedXml);
+  }
 
   private static Stream<Arguments> testCasesInfo() {
     return Stream.of(
@@ -270,41 +362,6 @@ public class DomXmlUtilTest {
             modify,
             getFile("xml/DOM_XML_UTIL/inputExistsElementXML.xml"),
             getFile("xml/DOM_XML_UTIL/modify/expectedExistElement.xml")
-        ),
-        Arguments.of(
-            add,
-            getFile("xml/DOM_XML_UTIL/inputNotExistsElementXML.xml"),
-            getFile("xml/DOM_XML_UTIL/add/value/expectedNotExistElement.xml")
-        ),
-        Arguments.of(
-            add,
-            getFile("xml/DOM_XML_UTIL/inputExistsElementXML.xml"),
-            getFile("xml/DOM_XML_UTIL/expectedExistElement.xml")
-        ),
-        Arguments.of(
-            addElement,
-            getFile("xml/DOM_XML_UTIL/add/element/inputExistsElementXML.xml"),
-            getFile("xml/DOM_XML_UTIL/add/element/expectedExistElement.xml")
-        ),
-        Arguments.of(
-            addElement,
-            getFile("xml/DOM_XML_UTIL/inputNotExistsElementXML.xml"),
-            getFile("xml/DOM_XML_UTIL/add/element/single/expectedNotExistElement.xml")
-        ),
-        Arguments.of(
-            addElementWithAttributes,
-            getFile("xml/DOM_XML_UTIL/inputNotExistsElementXML.xml"),
-            getFile("xml/DOM_XML_UTIL/add/element/single/expectedNotExistElementWithAttributes.xml")
-        ),
-        Arguments.of(
-            addListElements,
-            getFile("xml/DOM_XML_UTIL/add/element/inputExistsElementXML.xml"),
-            getFile("xml/DOM_XML_UTIL/add/element/expectedExistElement.xml")
-        ),
-        Arguments.of(
-            addListElements,
-            getFile("xml/DOM_XML_UTIL/inputNotExistsElementXML.xml"),
-            getFile("xml/DOM_XML_UTIL/add/element/list/expectedNotExistElement.xml")
         )
     );
   }
