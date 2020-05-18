@@ -124,7 +124,7 @@ public abstract class XmlOperation {
     }
   }
 
-  public void modifyElement(Document document, String xpathStr, Object newValue) {
+  public void modifyElement(Document document, String xpathStr, Object element) {
     Object res;
     try {
       XPathExpression expr = xPathExpression.compile(xpathStr);
@@ -132,8 +132,8 @@ public abstract class XmlOperation {
       NodeList nlist = (NodeList) res;
       for (int i = 0; i < nlist.getLength(); i++) {
         Node node = nlist.item(i);
-        if (newValue != null) {
-          node.setTextContent(newValue.toString());
+        if (element != null) {
+          setValueToElement(document, node, element);
         }
       }
     } catch (XPathExpressionException ignored) {
