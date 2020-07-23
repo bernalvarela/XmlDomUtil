@@ -86,7 +86,7 @@ ___
 ### Operations
 The existing operations are:
 
-#####AddAfterOperation:
+##### AddAfterOperation:
 We give the name and value of a new element, and the xpath of the element after we want to place it.
 If the xpath of the element don't exist, the new element will be placed at the end of the xml.
 If the element we want to create already exists the operation will do nothing.
@@ -101,7 +101,7 @@ List<XmlOperation> operations = Arrays.asList(
 ```
 
 
-#####AddAfterOrUpdateOperation:
+##### AddAfterOrUpdateOperation:
 This operation acts like AddAfterOperation with a difference, if the element already exists the value it's updated.
 ```java
 List<XmlOperation> operations = Arrays.asList(
@@ -113,7 +113,7 @@ List<XmlOperation> operations = Arrays.asList(
 );
 ```
 
-#####AddBeforeOperation:
+##### AddBeforeOperation:
 We give the name and value of a new element, and the xpath of the element before we want to place it.
 If the xpath of the element don't exist, the new element will be placed at the end of the xml.
 If the element we want to create already exists the operation will do nothing.
@@ -128,7 +128,7 @@ List<XmlOperation> operations = Arrays.asList(
 ```
 
 
-#####AddBeforeOrUpdateOperation:
+##### AddBeforeOrUpdateOperation:
 This operation acts like AddBeforeOperation with a difference, if the element already exists the value it's updated.
 ```java
 List<XmlOperation> operations = Arrays.asList(
@@ -140,7 +140,7 @@ List<XmlOperation> operations = Arrays.asList(
 );
 ```
 
-#####AddOperation:
+##### AddOperation:
 We give the name and value of a new element.
 The new element will be placed at the end of the xml.
 If the element we want to create already exists the operation will do nothing.
@@ -153,7 +153,7 @@ List<XmlOperation> operations = Arrays.asList(
 );
 ```
 
-#####AddOrUpdateOperation:
+##### AddOrUpdateOperation:
 This operation acts like AddOperation with a difference, if the element already exists the value it's updated.
 ```java
 List<XmlOperation> operations = Arrays.asList(
@@ -164,7 +164,6 @@ List<XmlOperation> operations = Arrays.asList(
 );
 ```
 
-#####ModifyOperation:
 This operation changes the value of a given element if it exists.
 ```java
 List<XmlOperation> operations = Arrays.asList(
@@ -182,7 +181,7 @@ List<XmlOperation> operations = Arrays.asList(
 );
 ```
 
-#####RemoveOperation:
+##### RemoveOperation:
 This operation deletes an element if it exists.
 ```java
 List<XmlOperation> operations = Arrays.asList(
